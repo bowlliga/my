@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.test">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" /> //블루투스 권한
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> //블루투스 권한
-
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- 블루투스 권한 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 블루투스 권한 -->
+    <!-- 블루투스 스캔을 위한 권한 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 블록내에 위치 정확성을 제공 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Test">
-        <activity android:name=".SubActivity"></activity>
+        <activity android:name=".Bluetooth"></activity>
+        <activity android:name=".SubActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

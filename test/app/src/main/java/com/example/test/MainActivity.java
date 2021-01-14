@@ -1,11 +1,15 @@
 package com.example.test;
 
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,8 +19,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +35,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     Button btnParents, btnKid, connWear; //추가하기, 웨어러블 연결 버튼
-    Switch btOnOff; //블루투스 온오프 스위치버튼
+
     BluetoothAdapter mBluetoothAdapter; //블루투스 어댑터
     Set<BluetoothDevice> mPairedDevices; //블루투스 디바이스 데이터 셋
     List<String> mListPairedDevices; // 페어링 된 기기 목록
@@ -45,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     final static UUID BT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     //아두이노 블루투스 범용모듈 uuid 00001101-0000-1000-8000-00805F9B34FB
 
+    private final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1; //퍼미션 강제발생
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         btnParents = findViewById(R.id.btnParents);//부모 추가버튼
         btnKid = findViewById(R.id.btnKid);//아이 추가버튼
         connWear = findViewById(R.id.connWear);//웨어러블 연결
-        btOnOff = findViewById(R.id.btOnOff);
+
 
         //부모 추가 버튼 클릭시
         btnParents.setOnClickListener(new View.OnClickListener() {
@@ -78,22 +88,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //블루투스 On/Off 스위치
-        btOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    blueoothOn();
-                   // Toast.makeText(getApplicationContext(),
-                   //        "블루투스 켜짐", Toast.LENGTH_SHORT).show();
-                }else{
-                    bluetoothOff();
-                    //Toast.makeText(getApplicationContext(),
-                    //        "블루투스 꺼짐", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });//btnOnOff
-
         //기기가 블루투스를 지원하는지 알아오는 메소드
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -102,12 +96,20 @@ public class MainActivity extends AppCompatActivity {
         connWear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listPairedDevices();
+                //listPairedDevices();
+                Intent intent = new Intent(getApplicationContext(), Bluetooth.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "블루투스 연결화면으로 이동합니다.", Toast.LENGTH_SHORT).show();
             }
 
         });//conWear
 
-    }//onCreate
+        //블루투스 스캔을 위한 퍼미션 강제 발생 코드
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+      }//onCreate
+
 
     //블루투스 On 메소드
     private void blueoothOn() {
