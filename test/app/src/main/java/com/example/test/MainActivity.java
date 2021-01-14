@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
     Button btnParents, btnKid, connWear; //추가하기, 웨어러블 연결 버튼
     Switch btOnOff; //블루투스 온오프 스위치버튼
     BluetoothAdapter mBluetoothAdapter; //블루투스 어댑터
@@ -83,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     blueoothOn();
-                    Toast.makeText(getApplicationContext(),
-                            "블루투스 켜짐", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),
+                   //        "블루투스 켜짐", Toast.LENGTH_SHORT).show();
                 }else{
                     bluetoothOff();
-                    Toast.makeText(getApplicationContext(),
-                            "블루투스 꺼짐", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),
+                    //        "블루투스 꺼짐", Toast.LENGTH_SHORT).show();
                 }
             }
         });//btnOnOff
@@ -111,21 +112,46 @@ public class MainActivity extends AppCompatActivity {
     //블루투스 On 메소드
     private void blueoothOn() {
         //스위치가 정상 작동하는지 테스트.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("테스트").setMessage("켜짐");
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
+        //AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("테스트").setMessage("켜짐");
+        //AlertDialog alertDialog = builder.create();
+        //alertDialog.show();
+        
+        //블루투스 켜기
+        if(mBluetoothAdapter == null){
+            Toast.makeText(getApplicationContext(),
+                    "블루투스를 지원하지 않는 기기 입니다.", Toast.LENGTH_SHORT).show();
+        }else {
+            if (mBluetoothAdapter.isEnabled()){
+                Toast.makeText(getApplicationContext(),
+                        "블루투스가 이미 켜져 있습니다.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(getApplicationContext(),
+                        "블루투스가 켜져 있지 않습니다.", Toast.LENGTH_SHORT).show();
+                Intent intentBluetoothEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(intentBluetoothEnable, BT_REQUEST_ENABLE);
+            }
+        }
     }//blueoothOn()
 
     //블루투스 Off 메소드
     private void bluetoothOff() {
         //스위치가 정상 작동하는지 테스트.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("테스트").setMessage("꺼짐");
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        //AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("테스트").setMessage("꺼짐");
+        //AlertDialog alertDialog = builder.create();
+        //alertDialog.show();
+        
+        //블루투스 끄기
+        if (mBluetoothAdapter.isEnabled()){
+            mBluetoothAdapter.disable();
+            Toast.makeText(getApplicationContext(),
+                    "블루투스가 꺼졌습니다.", Toast.LENGTH_SHORT).show();
 
+        }else {
+            Toast.makeText(getApplicationContext(),
+                    "블루투스가 이미 꺼져 있습니다.", Toast.LENGTH_SHORT).show();
+        }
     }//bluetoothOff()
 
 
